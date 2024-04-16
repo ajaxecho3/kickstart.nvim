@@ -1,5 +1,3 @@
---P.S. You can delete this when you're done too. It's your config now! :)
---]]
 local map = vim.keymap.set
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -91,15 +89,15 @@ map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]ui
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
 --
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
+-- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 map('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
--- map('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- map('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- map('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- map('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+map('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+map('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+map('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+map('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -129,6 +127,9 @@ map('n', '<leader><tab>[', '<cmd>tabprevious<cr>', { desc = 'Previous Tab' })
 map('n', '<space>z', 'za', { desc = 'Toggle fold' })
 map('n', '<space>o', 'zR', { desc = 'Open all folds' })
 map('n', '<space>c', 'zM', { desc = 'Close all folds' })
+
+-- Create fold
+map('v', '<space>z', 'zf', { desc = 'Create fold' })
 
 -- Save a file
 map('n', '<C-s>', '<cmd>write<CR>', { desc = 'Save the current file' })
@@ -535,7 +536,7 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -790,6 +791,19 @@ require('lazy').setup({
       -- You can configure the colorscheme here
       --  For example, you can set the `style` to 'storm' or 'day'
       require('tokyonight').setup { transparent = true }
+    end,
+  },
+
+  ---Sonokai theme
+  {
+
+    'sainnhe/sonokai',
+    config = function()
+      vim.g.sonokai_style = 'andromeda'
+      vim.g.sonokai_enable_italic = 1
+      vim.g.sonokai_disable_italic_comment = 1
+      vim.g.sonokai_transparent_background = 1
+      vim.cmd 'colorscheme sonokai'
     end,
   },
 
