@@ -185,7 +185,44 @@ return {
         return '%='
       end,
     }
-
+    -- Programming languages
+    ins_left {
+      function()
+        local syntax = vim.bo.filetype
+        if syntax == 'typescript' then
+          return 'TS'
+        elseif syntax == 'javascript' then
+          return 'JS'
+        elseif syntax == 'python' then
+          return 'PY'
+        elseif syntax == 'java' then
+          return 'JAVA'
+        elseif syntax == 'c' then
+          return 'C'
+        elseif syntax == 'cpp' then
+          return 'CPP'
+        elseif syntax == 'go' then
+          return 'GO'
+        elseif syntax == 'rust' then
+          return 'RUST'
+        elseif syntax == 'lua' then
+          return 'LUA'
+        elseif syntax == 'html' then
+          return 'HTML'
+        elseif syntax == 'css' then
+          return 'CSS'
+        elseif syntax == 'json' then
+          return 'JSON'
+        elseif syntax == 'yaml' then
+          return 'YAML'
+        elseif syntax == 'vim' then
+          return 'VIM'
+        else
+          return syntax
+        end
+      end,
+      color = { fg = colors.green, gui = 'bold' },
+    }
     ins_left {
       -- Lsp server name .
       function()
