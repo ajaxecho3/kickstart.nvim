@@ -73,6 +73,31 @@ vim.opt.scrolloff = 10
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
+
+vim.opt.termguicolors = true
+-- Set fold settings
+-- These options were reccommended by nvim-ufo
+-- See: https://github.com/kevinhwang91/nvim-ufo#minimal-configuration
+vim.opt.foldcolumn = '0'
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
+
+-- Always keep 8 lines above/below cursor unless at start/end of file
+vim.opt.scrolloff = 8
+
+-- Place a column line
+vim.opt.colorcolumn = '100'
+
+vim.opt.guicursor = {
+  'n-v-c:block', -- Normal, visual, command-line: block cursor
+  'i-ci-ve:ver25', -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
+  'r-cr:hor20', -- Replace, command-line replace: horizontal bar cursor with 20% height
+  'o:hor50', -- Operator-pending: horizontal bar cursor with 50% height
+  'a:blinkwait700-blinkoff400-blinkon250', -- All modes: blinking settings
+  'sm:block-blinkwait175-blinkoff150-blinkon175', -- Showmatch: block cursor with specific blinking settings
+}
+
 map('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 --Back normal mode
@@ -92,7 +117,6 @@ map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]ui
 -- or just use <C-\><C-n> to exit terminal mode
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 map('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
 -- TIP: Disable arrow keys in normal mode
 -- map('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- map('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -704,12 +728,24 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'onsails/lspkind.nvim',
+      'windwp/nvim-ts-autotag',
+      'windwp/nvim-autopairs',
     },
     config = function()
       -- See `:help cmp`
+      local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
+      local lspkind = require 'lspkind'
+
+      require('nvim-autopairs').setup()
+
+      -- Integrate nvim-autopairs with cmp
+      cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
+      -- Load snippets
+      require('luasnip.loaders.from_vscode').lazy_load()
 
       cmp.setup {
         snippet = {
@@ -717,58 +753,59 @@ require('lazy').setup({
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
-
-        -- For an understanding of why these mappings were
-        -- chosen, you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
-        mapping = cmp.mapping.preset.insert {
-          -- Select the [n]ext item
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          -- Select the [p]revious item
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
-
-          -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
-          -- Accept ([y]es) the completion.
-          --  This will auto-import if your LSP supports it.
-          --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
-
-          -- Manually trigger a completion from nvim-cmp.
-          --  Generally you don't need this, because nvim-cmp will display
-          --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
-
-          -- Think of <c-l> as moving to the right of your snippet expansion.
-          --  So if you have a snippet that's like:
-          --  function $name($args)
-          --    $body
-          --  end
-          --
-          -- <c-l> will move you to the right of each of the expansion locations.
-          -- <c-h> is similar, except moving you backwards.
-          ['<C-l>'] = cmp.mapping(function()
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            end
-          end, { 'i', 's' }),
-          ['<C-h>'] = cmp.mapping(function()
-            if luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            end
-          end, { 'i', 's' }),
-
-          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-          --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+        window = {
+          completion = cmp.config.window.bordered(),
+          documentation = cmp.config.window.bordered(),
         },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'copilot' },
+        mapping = cmp.mapping.preset.insert {
+          ['<C-k>'] = cmp.mapping.select_prev_item(), -- previous suggestion
+          ['<C-j>'] = cmp.mapping.select_next_item(), -- next suggestion
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { 'i', 's' }),
+          ['<C-u>'] = cmp.mapping.scroll_docs(4), -- scroll up preview
+          ['<C-d>'] = cmp.mapping.scroll_docs(-4), -- scroll down preview
+          ['<C-Space>'] = cmp.mapping.complete {}, -- show completion suggestions
+          ['<C-c>'] = cmp.mapping.abort(), -- close completion window
+          ['<CR>'] = cmp.mapping.confirm { select = true }, -- select suggestion
+        },
+        -- sources for autocompletion
+        sources = cmp.config.sources {
+          { name = 'nvim_lsp' }, -- lsp
+          { name = 'buffer', max_item_count = 5 }, -- text within current buffer
+          { name = 'copilot' }, -- Copilot suggestions
+          { name = 'path', max_item_count = 3 }, -- file system paths
+          { name = 'luasnip', max_item_count = 3 }, -- snippets
+        },
+        -- Enable pictogram icons for lsp/autocompletion
+        formatting = {
+          expandable_indicator = true,
+          format = lspkind.cmp_format {
+            mode = 'symbol_text',
+            maxwidth = 50,
+            ellipsis_char = '...',
+            symbol_map = {
+              Copilot = '',
+            },
+          },
+        },
+        experimental = {
+          ghost_text = true,
         },
       }
     end,
@@ -865,6 +902,43 @@ require('lazy').setup({
       incremental_selection = {
         enable = true,
         keymaps = { init_selection = 'gnn', node_incremental = 'grn', scope_incremental = 'grc', node_decremental = 'grm' },
+      },
+      autopairs = {
+        enable = true,
+      },
+      textobjects = {
+        select = {
+          enabled = true,
+          lookahead = true,
+          keymaps = {
+            ['aa'] = '@parameter.outer',
+            ['ia'] = '@parameter.inner',
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = '@class.inner',
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            [']m'] = '@function.outer',
+            [']]'] = '@class.outer',
+          },
+          goto_next_end = {
+            [']M'] = '@function.outer',
+            [']['] = '@class.outer',
+          },
+          goto_previous_start = {
+            ['[m'] = '@function.outer',
+            ['[['] = '@class.outer',
+          },
+          goto_previous_end = {
+            ['[M'] = '@function.outer',
+            ['[]'] = '@class.outer',
+          },
+        },
       },
       autotag = {
         enable = true,
