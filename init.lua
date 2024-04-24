@@ -98,6 +98,9 @@ vim.opt.guicursor = {
   'sm:block-blinkwait175-blinkoff150-blinkon175', -- Showmatch: block cursor with specific blinking settings
 }
 
+--Quit all windows
+map('n', '<leader>x', '<cmd>qa<CR>', { desc = 'Quit all windows' })
+
 map('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 --Back normal mode
