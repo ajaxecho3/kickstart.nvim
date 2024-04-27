@@ -403,7 +403,13 @@ require('lazy').setup({
       map('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
       map('n', '<space>fb', function()
         require('telescope').extensions.file_browser.file_browser()
-      end)
+      end, { desc = '[f]ile [b]rowser' })
+      map('n', '<space>fB', function()
+        require('telescope').extensions.file_browser.file_browser { cwd = vim.fn.expand '%:p:h' }
+      end, { desc = '[f]ile [B]rowser (current directory)' })
+      map('n', '<leader>fp', function()
+        require('telescope').extensions.file_browser.file_browser { cwd = vim.fn.stdpath 'config' }
+      end, { desc = '[f]ile [p]icker (config directory)' })
       -- Slightly advanced example of overriding default behavior and theme
       map('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -585,7 +591,6 @@ require('lazy').setup({
         html = {},
         jsonls = {},
         --
-
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
