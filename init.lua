@@ -12,7 +12,12 @@ vim.g.have_nerd_font = false
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
-
+map(
+  'n',
+  '<leader>of',
+  '<cmd>lua require("telescope.builtin").find_files({ find_command = { "rg", "--files", "--hidden", "--no-ignore", "--follow", "--glob", "!.git" } })<CR>',
+  { desc = 'Open file' }
+)
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
@@ -842,18 +847,65 @@ require('lazy').setup({
   },
 
   ---Sonokai theme
+  -- {
+  --
+  --   'sainnhe/sonokai',
+  --   config = function()
+  --     vim.g.sonokai_style = 'andromeda'
+  --     vim.g.sonokai_enable_italic = 1
+  --     vim.g.sonokai_disable_italic_comment = 1
+  --     vim.g.sonokai_transparent_background = 1
+  --     vim.cmd 'colorscheme sonokai'
+  --   end,
+  -- },
+  --
+  --Cyber dreams
   {
-
-    'sainnhe/sonokai',
+    'scottmckendry/cyberdream.nvim',
+    lazy = false,
+    priority = 1000,
     config = function()
-      vim.g.sonokai_style = 'andromeda'
-      vim.g.sonokai_enable_italic = 1
-      vim.g.sonokai_disable_italic_comment = 1
-      vim.g.sonokai_transparent_background = 1
-      vim.cmd 'colorscheme sonokai'
+      require('cyberdream').setup {
+        -- Recommended - see "Configuring" below for more config options
+        -- Enable transparent background
+        transparent = true, -- Default: false
+
+        -- Enable italics comments
+        italic_comments = true, -- Default: false
+
+        -- Replace all fillchars with ' ' for the ultimate clean look
+        hide_fillchars = true, -- Default: false
+
+        -- Modern borderless telescope theme
+        borderless_telescope = true, -- Default: true
+
+        -- Set terminal colors used in `:terminal`
+        terminal_colors = true, -- Default: true
+
+        theme = { -- Default: nil
+          highlights = {
+            -- Highlight groups to override, adding new groups is also possible
+            -- See `:help highlight-groups` for a list of highlight groups
+
+            -- Example:
+            Comment = { fg = '#696969', bg = 'NONE', italic = true },
+
+            -- Complete list can be found in `lua/cyberdream/theme.lua`
+          },
+
+          -- Override a color entirely
+          colors = {
+            -- For a list of colors see `lua/cyberdream/colours.lua`
+            -- Example:
+            bg = '#000000',
+            green = '#00ff00',
+            magenta = '#ff00ff',
+          },
+        },
+      }
+      vim.cmd 'colorscheme cyberdream' -- set the colorscheme
     end,
   },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
