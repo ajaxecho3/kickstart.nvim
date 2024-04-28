@@ -1,14 +1,25 @@
 return {
   {
     'zbirenbaum/copilot.lua',
-    enabled = true,
-    event = { 'BufEnter' },
+    cmd = 'Copilot',
+    build = ':Copilot auth',
+    event = 'InsertEnter',
     config = function()
       require('copilot').setup {
         suggestion = {
-          enabled = false,
+          auto_trigger = true,
+          keymap = {
+            accept = '<M-l>',
+            accept_line = '<M-L>',
+            accept_word = '<M-;>',
+          },
         },
         panel = { enabled = false },
+        filetypes = {
+          markdown = true,
+          yaml = true,
+          help = true,
+        },
       }
     end,
   },

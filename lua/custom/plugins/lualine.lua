@@ -1,23 +1,33 @@
 return {
   'nvim-lualine/lualine.nvim',
+  event = 'VeryLazy',
   dependencies = {
     'nvim-tree/nvim-web-devicons',
   },
   config = function()
     local lualine = require 'lualine'
-    local colors = {
-      bg = '#202328',
-      fg = '#bbc2cf',
-      yellow = '#ECBE7B',
-      cyan = '#008080',
-      darkblue = '#081633',
-      green = '#98be65',
-      orange = '#FF8800',
-      violet = '#a9a1e1',
-      magenta = '#c678dd',
-      blue = '#51afef',
-      red = '#ec5f67',
+    -- local colors = {
+    --   bg = '#202328',
+    --   fg = '#bbc2cf',
+    --   yellow = '#ECBE7B',
+    --   cyan = '#008080',
+    --   darkblue = '#081633',
+    --   green = '#98be65',
+    --   orange = '#FF8800',
+    --   violet = '#a9a1e1',
+    --   magenta = '#c678dd',
+    --   blue = '#51afef',
+    --   red = '#ec5f67',
+    -- }
+    local colors = require('cyberdream.colors').default
+    local cyberdream = require 'lualine.themes.cyberdream'
+    local copilot_colors = {
+      [''] = { fg = colors.grey, bg = colors.none },
+      ['Normal'] = { fg = colors.grey, bg = colors.none },
+      ['Warning'] = { fg = colors.red, bg = colors.none },
+      ['InProgress'] = { fg = colors.yellow, bg = colors.none },
     }
+
     local conditions = {
       buffer_not_empty = function()
         return vim.fn.empty(vim.fn.expand '%:t') ~= 1
@@ -37,13 +47,16 @@ return {
         -- Disable sections and component separators
         component_separators = '',
         section_separators = '',
-        theme = {
-          -- We are going to use lualine_c an lualine_x as left and
-          -- right section. Both are highlighted by c theme .  So we
-          -- are just setting default looks o statusline
-          normal = { c = { fg = colors.fg, bg = colors.bg } },
-          inactive = { c = { fg = colors.fg, bg = colors.bg } },
-        },
+        -- theme = {
+        --   -- We are going to use lualine_c an lualine_x as left and
+        --   -- right section. Both are highlighted by c theme .  So we
+        --   -- are just setting default looks o statusline
+        --   normal = { c = { fg = colors.fg, bg = colors.bg } },
+        --   inactive = { c = { fg = colors.fg, bg = colors.bg } },
+        -- },
+        theme = cyberdream,
+        globalstatus = true,
+        disabled_filetypes = { statusline = { 'dashboard', 'alpha' } },
       },
       sections = {
         -- these are to remove the defaults
@@ -170,12 +183,21 @@ return {
     ins_left {
       'diagnostics',
       sources = { 'nvim_diagnostic' },
-      symbols = { error = ' ', warn = ' ', info = ' ' },
-      diagnostics_color = {
-        color_error = { fg = colors.red },
-        color_warn = { fg = colors.yellow },
-        color_info = { fg = colors.cyan },
-      },
+      symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
+      -- diagnostics_color = {
+      --   color_error = { fg = colors.red },
+      --   color_warn = { fg = colors.yellow },
+      --   color_info = { fg = colors.cyan },
+      -- },
+    }
+    ins_left {
+      function()
+        return require('nvim-navic').get_location()
+      end,
+      cond = function()
+        return package.loaded['nvim-navic'] and require('nvim-navic').is_available()
+      end,
+      color = { fg = colors.grey, bg = colors.none },
     }
 
     -- Insert mid section. You can make any number of sections in neovim :)
@@ -187,42 +209,49 @@ return {
     }
     -- Programming languages
     ins_left {
-      function()
-        local syntax = vim.bo.filetype
-        if syntax == 'typescript' then
-          return 'TS'
-        elseif syntax == 'javascript' then
-          return 'JS'
-        elseif syntax == 'python' then
-          return 'PY'
-        elseif syntax == 'java' then
-          return 'JAVA'
-        elseif syntax == 'c' then
-          return 'C'
-        elseif syntax == 'cpp' then
-          return 'CPP'
-        elseif syntax == 'go' then
-          return 'GO'
-        elseif syntax == 'rust' then
-          return 'RUST'
-        elseif syntax == 'lua' then
-          return 'LUA'
-        elseif syntax == 'html' then
-          return 'HTML'
-        elseif syntax == 'css' then
-          return 'CSS'
-        elseif syntax == 'json' then
-          return 'JSON'
-        elseif syntax == 'yaml' then
-          return 'YAML'
-        elseif syntax == 'vim' then
-          return 'VIM'
-        else
-          return syntax
-        end
-      end,
+      'filetype',
+      icon_only = true,
+      seperator = '',
+      padding = { left = 1, right = 0 },
       color = { fg = colors.green, gui = 'bold' },
     }
+
+    -- ins_left {
+    --        -- function()
+    --   local syntax = vim.bo.filetype
+    --   if syntax == 'typescript' then
+    --     return 'TS'
+    --   elseif syntax == 'javascript' then
+    --     return 'JS'
+    --   elseif syntax == 'python' then
+    --     return 'PY'
+    --   elseif syntax == 'java' then
+    --     return 'JAVA'
+    --   elseif syntax == 'c' then
+    --     return 'C'
+    --   elseif syntax == 'cpp' then
+    --     return 'CPP'
+    --   elseif syntax == 'go' then
+    --     return 'GO'
+    --   elseif syntax == 'rust' then
+    --     return 'RUST'
+    --   elseif syntax == 'lua' then
+    --     return 'LUA'
+    --   elseif syntax == 'html' then
+    --     return 'HTML'
+    --   elseif syntax == 'css' then
+    --     return 'CSS'
+    --   elseif syntax == 'json' then
+    --     return 'JSON'
+    --   elseif syntax == 'yaml' then
+    --     return 'YAML'
+    --   elseif syntax == 'vim' then
+    --     return 'VIM'
+    --   else
+    --     return syntax
+    --   end
+    -- end,
+    --[[ } ]]
     ins_left {
       -- Lsp server name .
       function()
@@ -279,10 +308,21 @@ return {
 
     ins_right {
       function()
-        return '▊'
+        local icon = ' '
+        local status = require('copilot.api').status.data
+        return icon .. (status.message or '')
       end,
-      color = { fg = colors.blue },
-      padding = { left = 1 },
+      cond = function()
+        local ok, clients = pcall(vim.lsp.get_active_clients, { name = 'copilot', bufnr = 0 })
+        return ok and #clients > 0
+      end,
+      color = function()
+        if not package.loaded['copilot'] then
+          return
+        end
+        local status = require('copilot.api').status.data
+        return copilot_colors[status.status] or copilot_colors['']
+      end,
     }
 
     -- Now don't forget to initialize lualine
