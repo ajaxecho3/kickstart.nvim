@@ -5,9 +5,16 @@ local map = vim.keymap.set
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
+-- vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
+-- vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
+-- vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
+-- vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
+-- vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
+-- vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
+--
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
-
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -208,7 +215,6 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
-
   -- LazyGit
   {
     'kdheepak/lazygit.nvim',
@@ -446,7 +452,7 @@ require('lazy').setup({
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-
+      'smiteshp/nvim-navic',
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
@@ -847,26 +853,25 @@ require('lazy').setup({
   },
 
   ---Sonokai theme
-  -- {
-  --
-  --   'sainnhe/sonokai',
-  --   config = function()
-  --     vim.g.sonokai_style = 'andromeda'
-  --     vim.g.sonokai_enable_italic = 1
-  --     vim.g.sonokai_disable_italic_comment = 1
-  --     vim.g.sonokai_transparent_background = 1
-  --     vim.cmd 'colorscheme sonokai'
-  --   end,
-  -- },
-  --
+  {
+
+    'sainnhe/sonokai',
+    config = function()
+      vim.g.sonokai_style = 'andromeda'
+      vim.g.sonokai_enable_italic = 1
+      vim.g.sonokai_disable_italic_comment = 1
+      vim.g.sonokai_transparent_background = 1
+      vim.cmd 'colorscheme sonokai'
+    end,
+  },
+
   --Cyber dreams
   {
     'scottmckendry/cyberdream.nvim',
-    lazy = false,
+    lazy = true,
     priority = 1000,
     config = function()
       require('cyberdream').setup {
-        -- Recommended - see "Configuring" below for more config options
         -- Enable transparent background
         transparent = true, -- Default: false
 
@@ -881,27 +886,6 @@ require('lazy').setup({
 
         -- Set terminal colors used in `:terminal`
         terminal_colors = true, -- Default: true
-
-        theme = { -- Default: nil
-          highlights = {
-            -- Highlight groups to override, adding new groups is also possible
-            -- See `:help highlight-groups` for a list of highlight groups
-
-            -- Example:
-            Comment = { fg = '#696969', bg = 'NONE', italic = true },
-
-            -- Complete list can be found in `lua/cyberdream/theme.lua`
-          },
-
-          -- Override a color entirely
-          colors = {
-            -- For a list of colors see `lua/cyberdream/colours.lua`
-            -- Example:
-            bg = '#000000',
-            green = '#00ff00',
-            magenta = '#ff00ff',
-          },
-        },
       }
       vim.cmd 'colorscheme cyberdream' -- set the colorscheme
     end,
@@ -958,6 +942,7 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
+
       indent = { enable = true, disable = { 'ruby' } },
       incremental_selection = {
         enable = true,
@@ -1061,6 +1046,10 @@ require('lazy').setup({
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
 }, {
+  install = {
+    missing = true,
+    colorscheme = { 'cyberdream' },
+  },
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table

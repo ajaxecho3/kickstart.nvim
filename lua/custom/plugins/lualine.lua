@@ -68,6 +68,28 @@ return {
         lualine_c = {},
         lualine_x = {},
       },
+      winbar = {
+        lualine_c = {
+          {
+            function()
+              return require('nvim-navic').get_location()
+            end,
+            cond = function()
+              return package.loaded['nvim-navic'] and require('nvim-navic').is_available()
+            end,
+            color = { fg = colors.grey, bg = colors.none },
+          },
+        },
+
+        lualine_x = {
+          {
+            'branch',
+            icon = '',
+            color = { fg = colors.violet, gui = 'bold' },
+          },
+        },
+      },
+
       inactive_sections = {
         -- these are to remove the defaults
         lualine_a = {},
@@ -190,16 +212,6 @@ return {
       --   color_info = { fg = colors.cyan },
       -- },
     }
-    ins_left {
-      function()
-        return require('nvim-navic').get_location()
-      end,
-      cond = function()
-        return package.loaded['nvim-navic'] and require('nvim-navic').is_available()
-      end,
-      color = { fg = colors.grey, bg = colors.none },
-    }
-
     -- Insert mid section. You can make any number of sections in neovim :)
     -- for lualine it's any number greater then 2
     ins_left {
@@ -252,26 +264,6 @@ return {
     --   end
     -- end,
     --[[ } ]]
-    ins_left {
-      -- Lsp server name .
-      function()
-        local msg = 'No Active Lsp'
-        local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
-        local clients = vim.lsp.get_active_clients()
-        if next(clients) == nil then
-          return msg
-        end
-        for _, client in ipairs(clients) do
-          local filetypes = client.config.filetypes
-          if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-            return client.name
-          end
-        end
-        return msg
-      end,
-      icon = ' LSP:',
-      color = { fg = '#ffffff', gui = 'bold' },
-    }
 
     -- Add components to right sections
     ins_right {
@@ -286,12 +278,6 @@ return {
       fmt = string.upper,
       icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
       color = { fg = colors.green, gui = 'bold' },
-    }
-
-    ins_right {
-      'branch',
-      icon = '',
-      color = { fg = colors.violet, gui = 'bold' },
     }
 
     ins_right {
@@ -323,6 +309,26 @@ return {
         local status = require('copilot.api').status.data
         return copilot_colors[status.status] or copilot_colors['']
       end,
+    }
+    ins_right {
+      -- Lsp server name .
+      function()
+        local msg = 'No Active Lsp'
+        local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+        local clients = vim.lsp.get_active_clients()
+        if next(clients) == nil then
+          return msg
+        end
+        for _, client in ipairs(clients) do
+          local filetypes = client.config.filetypes
+          if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+            return client.name
+          end
+        end
+        return msg
+      end,
+      icon = ' LSP:',
+      color = { fg = '#ffffff', gui = 'bold' },
     }
 
     -- Now don't forget to initialize lualine
