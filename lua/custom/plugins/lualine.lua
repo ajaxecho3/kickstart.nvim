@@ -202,16 +202,16 @@ return {
 
     ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
 
-    ins_left {
-      'diagnostics',
-      sources = { 'nvim_diagnostic' },
-      symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
-      -- diagnostics_color = {
-      --   color_error = { fg = colors.red },
-      --   color_warn = { fg = colors.yellow },
-      --   color_info = { fg = colors.cyan },
-      -- },
-    }
+    -- ins_left {
+    --   'diagnostics',
+    --   sources = { 'nvim_diagnostic' },
+    --   symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
+    --   -- diagnostics_color = {
+    --   --   color_error = { fg = colors.red },
+    --   --   color_warn = { fg = colors.yellow },
+    --   --   color_info = { fg = colors.cyan },
+    --   -- },
+    -- }
     -- Insert mid section. You can make any number of sections in neovim :)
     -- for lualine it's any number greater then 2
     ins_left {
