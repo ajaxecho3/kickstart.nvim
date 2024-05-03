@@ -5,14 +5,6 @@ local map = vim.keymap.set
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- vim.api.nvim_set_hl(0, 'RainbowRed', { fg = '#E06C75' })
--- vim.api.nvim_set_hl(0, 'RainbowYellow', { fg = '#E5C07B' })
--- vim.api.nvim_set_hl(0, 'RainbowBlue', { fg = '#61AFEF' })
--- vim.api.nvim_set_hl(0, 'RainbowOrange', { fg = '#D19A66' })
--- vim.api.nvim_set_hl(0, 'RainbowGreen', { fg = '#98C379' })
--- vim.api.nvim_set_hl(0, 'RainbowViolet', { fg = '#C678DD' })
--- vim.api.nvim_set_hl(0, 'RainbowCyan', { fg = '#56B6C2' })
---
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 -- [[ Setting options ]]
@@ -70,7 +62,10 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.list = true
+vim.opt.listchars:append 'space:⋅'
+vim.opt.listchars:append 'eol:↴'
+vim.opt.listchars:append 'tab:» '
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -246,24 +241,6 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
-
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
-  -- See `:help gitsigns` to understand what the configuration keys do
-  --[[ {
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  }, ]]
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -856,6 +833,8 @@ require('lazy').setup({
   {
 
     'sainnhe/sonokai',
+    lazy = true,
+    priority = 1000,
     config = function()
       vim.g.sonokai_style = 'andromeda'
       vim.g.sonokai_enable_italic = 1
@@ -869,7 +848,7 @@ require('lazy').setup({
   {
     'scottmckendry/cyberdream.nvim',
     lazy = true,
-    priority = 1000,
+    priority = 500,
     config = function()
       require('cyberdream').setup {
         -- Enable transparent background
@@ -887,7 +866,7 @@ require('lazy').setup({
         -- Set terminal colors used in `:terminal`
         terminal_colors = true, -- Default: true
       }
-      vim.cmd 'colorscheme cyberdream' -- set the colorscheme
+      -- vim.cmd 'colorscheme cyberdream' set the colorscheme
     end,
   },
   -- Highlight todo, notes, etc in comments

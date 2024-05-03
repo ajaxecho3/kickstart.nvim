@@ -14,19 +14,24 @@ return {
     { '<leader>bw', ':BufferLineCloseAllButCurrent<CR>', desc = 'Close all but current buffer' },
     { '<leader>bx', ':BufferLineClose<CR>', desc = 'Close buffer' },
   },
-  opts = {
-    options = {
-      indicator = { style = 'none' },
-      buffer_close_icon = '',
-      separator_style = { '', '' },
-      always_show_bufferline = false,
-      offsets = {
-        {
-          filetype = 'neo-tree',
-          text = 'Explorer',
-          text_align = 'center',
+  opts = {},
+  config = function()
+    require('bufferline').setup {
+      highlights = {},
+      options = {
+
+        indicator = { style = 'none' },
+        buffer_close_icon = '',
+        separator_style = 'slope',
+        always_show_bufferline = false,
+        offsets = {
+          {
+            filetype = 'neo-tree',
+            text = 'Explorer',
+            text_align = 'center',
+          },
         },
       },
-    },
-  },
+    }
+  end,
 }
