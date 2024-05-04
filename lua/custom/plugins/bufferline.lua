@@ -17,35 +17,26 @@ return {
   opts = {},
   config = function()
     require('bufferline').setup {
-      -- highlights = {
-      --
-      --   separator = {
-      --     fg = '#073642',
-      --     bg = '#002b36',
-      --   },
-      --   separator_selected = {
-      --     fg = '#073642',
-      --   },
-      --   background = {
-      --     fg = '#657b83',
-      --     bg = '#002b36',
-      --   },
-      --   buffer_selected = {
-      --     fg = '#fdf6e3',
-      --     gui = 'bold',
-      --   },
-      --   fill = {
-      --     bg = '#002b36',
-      --   },
-      -- },
+      highlights = {
+
+        buffer_selected = {
+          fg = '#fdf6e3',
+          gui = 'bold',
+          bg = '#2E2E2E',
+        },
+        buffer_visible = {
+          fg = '#FFFFFF',
+          bg = '#282828',
+        },
+      },
 
       options = {
 
         indicator = { style = 'none' },
         buffer_close_icon = '',
-        separator_style = { '⦚', '⦚' },
         always_show_bufferline = false,
         color_icons = true,
+        themable = true,
         offsets = {
           {
             filetype = 'neo-tree',
