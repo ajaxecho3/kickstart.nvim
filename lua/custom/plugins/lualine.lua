@@ -6,19 +6,6 @@ return {
   },
   config = function()
     local lualine = require 'lualine'
-    -- local colors = {
-    --   bg = '#202328',
-    --   fg = '#bbc2cf',
-    --   yellow = '#ECBE7B',
-    --   cyan = '#008080',
-    --   darkblue = '#081633',
-    --   green = '#98be65',
-    --   orange = '#FF8800',
-    --   violet = '#a9a1e1',
-    --   magenta = '#c678dd',
-    --   blue = '#51afef',
-    --   red = '#ec5f67',
-    -- }
     local colors = require('cyberdream.colors').default
     local cyberdream = require 'lualine.themes.cyberdream'
     local copilot_colors = {
@@ -27,6 +14,7 @@ return {
       ['Warning'] = { fg = colors.red, bg = colors.none },
       ['InProgress'] = { fg = colors.yellow, bg = colors.none },
     }
+    local packageStatus = require('package-info').get_status()
 
     local conditions = {
       buffer_not_empty = function()
@@ -201,17 +189,11 @@ return {
     ins_left { 'location' }
 
     ins_left { 'progress', color = { fg = colors.fg, gui = 'bold' } }
-
-    -- ins_left {
-    --   'diagnostics',
-    --   sources = { 'nvim_diagnostic' },
-    --   symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
-    --   -- diagnostics_color = {
-    --   --   color_error = { fg = colors.red },
-    --   --   color_warn = { fg = colors.yellow },
-    --   --   color_info = { fg = colors.cyan },
-    --   -- },
-    -- }
+    ins_left {
+      function()
+        return packageStatus
+      end,
+    }
     -- Insert mid section. You can make any number of sections in neovim :)
     -- for lualine it's any number greater then 2
     ins_left {
@@ -227,43 +209,6 @@ return {
       padding = { left = 1, right = 0 },
       color = { fg = colors.green, gui = 'bold' },
     }
-
-    -- ins_left {
-    --        -- function()
-    --   local syntax = vim.bo.filetype
-    --   if syntax == 'typescript' then
-    --     return 'TS'
-    --   elseif syntax == 'javascript' then
-    --     return 'JS'
-    --   elseif syntax == 'python' then
-    --     return 'PY'
-    --   elseif syntax == 'java' then
-    --     return 'JAVA'
-    --   elseif syntax == 'c' then
-    --     return 'C'
-    --   elseif syntax == 'cpp' then
-    --     return 'CPP'
-    --   elseif syntax == 'go' then
-    --     return 'GO'
-    --   elseif syntax == 'rust' then
-    --     return 'RUST'
-    --   elseif syntax == 'lua' then
-    --     return 'LUA'
-    --   elseif syntax == 'html' then
-    --     return 'HTML'
-    --   elseif syntax == 'css' then
-    --     return 'CSS'
-    --   elseif syntax == 'json' then
-    --     return 'JSON'
-    --   elseif syntax == 'yaml' then
-    --     return 'YAML'
-    --   elseif syntax == 'vim' then
-    --     return 'VIM'
-    --   else
-    --     return syntax
-    --   end
-    -- end,
-    --[[ } ]]
 
     -- Add components to right sections
     ins_right {

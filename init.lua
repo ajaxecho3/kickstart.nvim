@@ -604,7 +604,11 @@ require('lazy').setup({
           filetypes = { 'css', 'scss', 'less' },
           capabilities = capabilities,
         },
-        tailwindcss = {},
+        tailwindcss = {
+          root_dir = function(...)
+            return require('lspconfig.util').root_pattern '.git'(...)
+          end,
+        },
         html = {},
         jsonls = {},
         --
