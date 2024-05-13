@@ -22,6 +22,9 @@ vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
+vim.api.nvim_set_hl(0, 'LineNr', { fg = '#2E3440', bold = true })
+vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = '#51B3EC', bold = true })
+vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = '#FB508F', bold = true })
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
