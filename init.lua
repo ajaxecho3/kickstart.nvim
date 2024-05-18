@@ -108,6 +108,34 @@ vim.opt.guicursor = {
   'sm:block-blinkwait175-blinkoff150-blinkon175', -- Showmatch: block cursor with specific blinking settings
 }
 
+local function split_on(s, delimiter)
+  local result = {}
+  local from = 1
+  local delim_from, delim_to = string.find(s, delimiter, from)
+  while delim_from do
+    table.insert(result, string.sub(s, from, delim_from - 1))
+    from = delim_to + 1
+    delim_from, delim_to = string.find(s, delimiter, from)
+  end
+  table.insert(result, string.sub(s, from))
+  return result
+end
+
+local diagnostic_foramt = function(diagnostic)
+  return string.format('%s: %s', diagnostic.source, split_on(diagnostic.message, '\n')[1])
+end
+
+vim.diagnostic.config {
+  virtual_text = {
+    prefix = '■',
+    format = diagnostic_foramt,
+  },
+  severity_sort = true,
+  float = {
+    source = 'always',
+  },
+}
+
 --Quit all windows
 map('n', '<leader>x', '<cmd>qa<CR>', { desc = 'Quit all windows' })
 
@@ -214,6 +242,8 @@ require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
   { 'akinsho/bufferline.nvim', version = '*', dependencies = 'nvim-tree/nvim-web-devicons' },
   -- LazyGit
+  --
+  { 'nvim-tree/nvim-web-devicons', lazy = true, enabled = vim.g.have_nerd_font }, --
   {
     'kdheepak/lazygit.nvim',
     cmd = {
@@ -338,7 +368,7 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         -- defaults = {
-        --   mappings = {
+        --   mappings =
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
