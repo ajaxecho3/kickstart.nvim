@@ -136,6 +136,8 @@ vim.diagnostic.config {
   },
 }
 
+map('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+
 --Quit all windows
 map('n', '<leader>x', '<cmd>qa<CR>', { desc = 'Quit all windows' })
 
