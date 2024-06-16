@@ -5,7 +5,6 @@ local map = vim.keymap.set
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
@@ -22,12 +21,11 @@ vim.opt.number = false
 vim.opt.relativenumber = true
 vim.api.nvim_set_hl(0, 'LineNr', { fg = '#2E3440', bold = true })
 vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = '#51B3EC', bold = true })
-vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = '#FB508F', bold = true })
+
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
-
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
@@ -134,6 +132,7 @@ vim.diagnostic.config {
 
 --Inlay hints
 map('n', '<leader>ih', function()
+  ---@diagnostic disable-next-line: missing-parameter
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 end)
 
@@ -214,7 +213,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -320,7 +318,7 @@ require('lazy').setup({
         -- This is only run then, not every time Neovim starts up.
         build = 'make',
 
-        -- `cond` is a condition used to determine whether this plugin should be
+        -- `cond` is a condition used to determine whether this plugin should belsp
         -- installed and loaded.
         cond = function()
           return vim.fn.executable 'make' == 1
@@ -586,9 +584,36 @@ require('lazy').setup({
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
-        gopls = {},
+        gopls = {
+          cmd = { 'gopls', 'serve' },
+          settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+              },
+              staticcheck = true,
+            },
+          },
+        },
         -- pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {
+          capabilities = capabilities,
+          settings = {
+            ['rust-analyzer'] = {
+              assist = {
+                importMergeBehavior = 'last',
+                importPrefix = 'by_self',
+              },
+              cargo = {
+                loadOutDirsFromCheck = true,
+              },
+              procMacro = {
+                enable = true,
+              },
+            },
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -603,7 +628,7 @@ require('lazy').setup({
           settings = {
             typescript = {
               inlayHints = {
-                includeInlayParameterNameHints = 'literal',
+                includeInlayParameterNameHints = 'all',
                 includeInlayParameterNameHintsWhenArgumentMatchesName = false,
                 includeInlayFunctionParameterTypeHints = true,
                 includeInlayVariableTypeHints = false,
@@ -626,11 +651,7 @@ require('lazy').setup({
           },
         },
         cssls = {},
-        cssmodules_ls = {
-          cmd = { 'css-languageserver', '--stdio' },
-          filetypes = { 'css', 'scss', 'less' },
-          capabilities = capabilities,
-        },
+        cssmodules_ls = {},
         tailwindcss = {
           root_dir = function(...)
             return require('lspconfig.util').root_pattern '.git'(...)
@@ -844,7 +865,7 @@ require('lazy').setup({
         sources = cmp.config.sources {
           { name = 'nvim_lsp' }, -- lsp
           { name = 'buffer', max_item_count = 5 }, -- text within current buffer
-          { name = 'copilot' }, -- Copilot suggestions
+          { name = 'copilot' },
           { name = 'path', max_item_count = 3 }, -- file system paths
           { name = 'luasnip', max_item_count = 3 }, -- snippets
         },
@@ -946,15 +967,15 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    event = { 'BufRead', 'BufNewFile' },
     dependencies = {
       'windwp/nvim-ts-autotag',
-      'nvim-treesitter/playground',
       'nvim-treesitter/nvim-treesitter-textobjects',
       'nvim-treesitter/nvim-treesitter-refactor',
       'nvim-treesitter/nvim-treesitter-context',
     },
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'javascript', 'typescript' },
+      ensure_installed = { 'go', 'rust', 'tsx', 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'javascript', 'typescript' },
       auto_install = true,
       highlight = {
         enable = true,
@@ -972,65 +993,70 @@ require('lazy').setup({
       autopairs = {
         enable = true,
       },
-      textobjects = {
-        select = {
-          enabled = true,
-          lookahead = true,
-          keymaps = {
-            ['aa'] = '@parameter.outer',
-            ['ia'] = '@parameter.inner',
-            ['af'] = '@function.outer',
-            ['if'] = '@function.inner',
-            ['ac'] = '@class.outer',
-            ['ic'] = '@class.inner',
+      -- textobjects = {
+      --   select = {
+      --     enabled = true,
+      --     lookahead = true,
+      --     keymaps = {
+      --       ['aa'] = '@parameter.outer',
+      --       ['ia'] = '@parameter.inner',
+      --       ['af'] = '@function.outer',
+      --       ['if'] = '@function.inner',
+      --       ['ac'] = '@class.outer',
+      --       ['ic'] = '@class.inner',
+      --     },
+      --   },
+      --   move = {
+      --     enable = true,
+      --     set_jumps = true,
+      --     goto_next_start = {
+      --       [']m'] = '@function.outer',
+      --       [']]'] = '@class.outer',
+      --     },
+      --     goto_next_end = {
+      --       [']M'] = '@function.outer',
+      --       [']['] = '@class.outer',
+      --     },
+      --     goto_previous_start = {
+      --       ['[m'] = '@function.outer',
+      --       ['[['] = '@class.outer',
+      --     },
+      --     goto_previous_end = {
+      --       ['[M'] = '@function.outer',
+      --       ['[]'] = '@class.outer',
+      --     },
+      --   },
+      -- },
+
+      autotag = function()
+        require('nvim-ts-autotag').setup {
+          opts = {
+            enable_close = true,
+            update_on_move = true,
+            enable_rename = true,
+            enable_close_on_slash = true,
+            filetypes = {
+              'html',
+              'javascript',
+              'typescript',
+              'javascriptreact',
+              'typescriptreact',
+              'svelte',
+              'vue',
+              'tsx',
+              'jsx',
+              'rescript',
+              'xml',
+              'php',
+              'markdown',
+              'astro',
+              'glimmer',
+              'handlebars',
+              'hbs',
+            },
           },
-        },
-        move = {
-          enable = true,
-          set_jumps = true,
-          goto_next_start = {
-            [']m'] = '@function.outer',
-            [']]'] = '@class.outer',
-          },
-          goto_next_end = {
-            [']M'] = '@function.outer',
-            [']['] = '@class.outer',
-          },
-          goto_previous_start = {
-            ['[m'] = '@function.outer',
-            ['[['] = '@class.outer',
-          },
-          goto_previous_end = {
-            ['[M'] = '@function.outer',
-            ['[]'] = '@class.outer',
-          },
-        },
-      },
-      autotag = {
-        enable = true,
-        enable_rename = true,
-        enable_close = true,
-        enable_close_on_slash = true,
-        filetypes = {
-          'html',
-          'javascript',
-          'typescript',
-          'javascriptreact',
-          'typescriptreact',
-          'svelte',
-          'vue',
-          'tsx',
-          'jsx',
-          'rescript',
-          'xml',
-          'php',
-          'markdown',
-          'astro',
-          'glimmer',
-          'handlebars',
-          'hbs',
-        },
-      },
+        }
+      end,
     },
 
     config = function(_, opts)
