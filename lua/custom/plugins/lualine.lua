@@ -255,6 +255,20 @@ return {
         return copilot_colors[status.status] or copilot_colors['']
       end,
     }
+    -- Codeium status line
+    ins_right {
+      function()
+        local icon = ' '
+        local status = vim.api.nvim_call_function('codeium#GetStatusString', {})
+        return icon .. (status or '')
+      end,
+      color = function()
+        if not package.loaded['codeium'] then
+          return
+        end
+        return copilot_colors['InProgress'] or copilot_colors['']
+      end,
+    }
     ins_right {
       -- Lsp server name .
       function()
