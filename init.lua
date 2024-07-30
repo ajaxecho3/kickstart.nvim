@@ -403,15 +403,15 @@ require('lazy').setup({
       pcall(require('telescope').load_extension, 'file_browser')
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      map('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      map('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      map('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      map('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      map('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      map('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      map('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      map('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      map('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      map('n', '<leader>fh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      map('n', '<leader>fk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      map('n', '<leader>ff', builtin.find_files, { desc = '[S]earch [F]iles' })
+      map('n', '<leader>fs', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      map('n', '<leader>fw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      map('n', '<leader>fg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      map('n', '<leader>fd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      map('n', '<leader>fr', builtin.resume, { desc = '[S]earch [R]esume' })
+      map('n', '<leader>f.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       map('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
       map('n', '<space>fb', function()
         require('telescope').extensions.file_browser.file_browser()
@@ -626,9 +626,13 @@ require('lazy').setup({
           end,
           single_file_support = false,
           settings = {
+            jsx_close_tag = {
+              enable = true,
+              filetypes = { 'javascriptreact', 'typescriptreact' },
+            },
             typescript = {
               inlayHints = {
-                includeInlayParameterNameHints = 'all',
+                includeInlayParameterNameHints = 'literal',
                 includeInlayParameterNameHintsWhenArgumentMatchesName = false,
                 includeInlayFunctionParameterTypeHints = true,
                 includeInlayVariableTypeHints = false,
@@ -714,7 +718,7 @@ require('lazy').setup({
     lazy = false,
     keys = {
       {
-        '<leader>f',
+        '<leader>fm',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,

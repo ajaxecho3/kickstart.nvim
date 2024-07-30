@@ -1,4 +1,5 @@
 return {
+
   'nvim-lualine/lualine.nvim',
   event = 'VeryLazy',
   dependencies = {
@@ -6,8 +7,18 @@ return {
   },
   config = function()
     local lualine = require 'lualine'
-    local colors = require('tokyonight.colors').default
-    local cyberdream = require 'lualine.themes.tokyonight'
+    --[[ local colors = require 'lualine.themes.horizon' ]]
+    local colors = {
+      blue = '#80a0ff',
+      cyan = '#79dac8',
+      black = '#080808',
+      white = '#c6c6c6',
+      red = '#ff5189',
+      violet = '#d183e8',
+      grey = '#303030',
+      orange = '#ff8700',
+    }
+    local cyberdream = require 'lualine.themes.horizon'
     local copilot_colors = {
       [''] = { fg = colors.grey, bg = colors.none },
       ['Normal'] = { fg = colors.grey, bg = colors.none },
@@ -29,12 +40,33 @@ return {
         return gitdir and #gitdir > 0 and #gitdir < #filepath
       end,
     }
+    local bubbles_theme = {
+      normal = {
+        a = { fg = colors.black, bg = colors.orange },
+        b = { fg = colors.white, bg = colors.grey },
+        c = { fg = colors.white },
+      },
+
+      insert = { a = { fg = colors.black, bg = colors.blue } },
+      visual = { a = { fg = colors.black, bg = colors.cyan } },
+      replace = { a = { fg = colors.black, bg = colors.red } },
+
+      inactive = {
+        a = { fg = colors.white, bg = colors.black },
+        b = { fg = colors.white, bg = colors.black },
+        c = { fg = colors.white },
+      },
+    }
 
     local config = {
       options = {
         -- Disable sections and component separators
-        component_separators = '',
-        section_separators = '',
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
+        -- We are going to use lualine_c an lualine_x as left and
+        -- right section. Both are highlighted by c theme .  So we
+        -- are just setting default looks o statusline
+        -- theme = 'horizon',
         -- theme = {
         --   -- We are going to use lualine_c an lualine_x as left and
         --   -- right section. Both are highlighted by c theme .  So we
@@ -42,7 +74,7 @@ return {
         --   normal = { c = { fg = colors.fg, bg = colors.bg } },
         --   inactive = { c = { fg = colors.fg, bg = colors.bg } },
         -- },
-        theme = cyberdream,
+        theme = bubbles_theme,
         globalstatus = true,
         disabled_filetypes = { statusline = { 'dashboard', 'alpha' } },
       },
@@ -57,6 +89,44 @@ return {
         lualine_x = {},
       },
       winbar = {
+        lualine_a = {
+          {
+            -- mode component
+            -- function()
+            --   return ''
+            -- end,
+            'filetype',
+            icon_only = true,
+            color = function()
+              -- auto change color according to neovims mode
+              local mode_color = {
+                n = colors.red,
+                i = colors.cyan,
+                v = colors.blue,
+                [''] = colors.blue,
+                V = colors.blue,
+                c = colors.magenta,
+                no = colors.red,
+                s = colors.orange,
+                S = colors.orange,
+                [' '] = colors.orange,
+                ic = colors.yellow,
+                R = colors.violet,
+                Rv = colors.violet,
+                cv = colors.red,
+                ce = colors.red,
+                r = colors.cyan,
+                rm = colors.cyan,
+                ['r?'] = colors.cyan,
+                ['!'] = colors.red,
+                t = colors.red,
+              }
+              return { fg = mode_color[vim.fn.mode()] }
+            end,
+            padding = { left = 1, right = 1 },
+            -- I think icons are cool but Eviline doesn't have them. sigh
+          },
+        },
         lualine_c = {
           {
             function()
@@ -65,7 +135,7 @@ return {
             cond = function()
               return package.loaded['nvim-navic'] and require('nvim-navic').is_available()
             end,
-            color = { fg = colors.grey, bg = colors.none },
+            color = { fg = colors.white },
           },
         },
 
@@ -117,7 +187,7 @@ return {
         -- auto change color according to neovims mode
         local mode_color = {
           n = colors.red,
-          i = colors.green,
+          i = colors.cyan,
           v = colors.blue,
           [''] = colors.blue,
           V = colors.blue,
@@ -126,38 +196,6 @@ return {
           s = colors.orange,
           S = colors.orange,
           [' '] = colors.orange,
-          ic = colors.yellow,
-          R = colors.violet,
-          Rv = colors.violet,
-          cv = colors.red,
-          ce = colors.red,
-          r = colors.cyan,
-          rm = colors.cyan,
-          ['r?'] = colors.cyan,
-          ['!'] = colors.red,
-          t = colors.red,
-        }
-        return { fg = mode_color[vim.fn.mode()] }
-      end,
-    }
-    ins_left {
-      -- mode component
-      function()
-        return ''
-      end,
-      color = function()
-        -- auto change color according to neovims mode
-        local mode_color = {
-          n = colors.red,
-          i = colors.green,
-          v = colors.blue,
-          [''] = colors.blue,
-          V = colors.blue,
-          c = colors.magenta,
-          no = colors.red,
-          s = colors.orange,
-          S = colors.orange,
-          [''] = colors.orange,
           ic = colors.yellow,
           R = colors.violet,
           Rv = colors.violet,
@@ -196,19 +234,19 @@ return {
     }
     -- Insert mid section. You can make any number of sections in neovim :)
     -- for lualine it's any number greater then 2
-    ins_left {
-      function()
-        return '%='
-      end,
-    }
+    -- ins_left {
+    --   function()
+    --     return '%='
+    --   end,
+    -- }
     -- Programming languages
-    ins_left {
-      'filetype',
-      icon_only = true,
-      seperator = '',
-      padding = { left = 1, right = 0 },
-      color = { fg = colors.green, gui = 'bold' },
-    }
+    -- ins_left {
+    --   'filetype',
+    --   icon_only = true,
+    --   seperator = '',
+    --   padding = { left = 1, right = 0 },
+    --   color = { fg = colors.green, gui = 'bold' },
+    -- }
 
     -- Add components to right sections
     ins_right {
