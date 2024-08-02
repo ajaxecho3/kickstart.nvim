@@ -124,7 +124,7 @@ return {
               return { fg = mode_color[vim.fn.mode()] }
             end,
             padding = { left = 1, right = 1 },
-            -- I think icons are cool but Eviline doesn't have them. sigh
+            separator = { left = '', right = '' },
           },
         },
         lualine_c = {
@@ -143,7 +143,9 @@ return {
           {
             'branch',
             icon = '',
-            color = { fg = colors.violet, gui = 'bold' },
+            color = { fg = colors.black, bg = colors.orange },
+            padding = { left = 1, right = 1 },
+            separator = { right = '', left = '' },
           },
         },
       },
