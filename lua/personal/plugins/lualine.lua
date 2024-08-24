@@ -7,7 +7,6 @@ return {
   },
   config = function()
     local lualine = require 'lualine'
-    --[[ local colors = require 'lualine.themes.horizon' ]]
     local colors = {
       blue = '#80a0ff',
       cyan = '#79dac8',
@@ -18,7 +17,6 @@ return {
       grey = '#303030',
       orange = '#ff8700',
     }
-    local cyberdream = require 'lualine.themes.horizon'
     local copilot_colors = {
       [''] = { fg = colors.grey, bg = colors.none },
       ['Normal'] = { fg = colors.grey, bg = colors.none },
@@ -61,7 +59,7 @@ return {
     local config = {
       options = {
         -- Disable sections and component separators
-        component_separators = { left = '', right = '' },
+        component_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },
         -- We are going to use lualine_c an lualine_x as left and
         -- right section. Both are highlighted by c theme .  So we
