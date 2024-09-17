@@ -126,7 +126,7 @@ return {
             },
           },
         },
-        tsserver = {
+        ts_ls = {
           enabled = false,
         },
         vtsls = {
@@ -217,7 +217,7 @@ return {
             },
           },
           setup = {
-            tsserver = function()
+            ts_ls = function()
               return true
             end,
             vtsls = function(_, opts)
