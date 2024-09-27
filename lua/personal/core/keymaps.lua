@@ -8,6 +8,8 @@ map('n', '<leader>ih', function()
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 end, { desc = 'Toggle inlay hints' })
 
+--  See `:help hlsearch`
+vim.keymap.set('n', '<Esc><Esc>', '<cmd>nohlsearch<CR>')
 -- Oil
 map('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 

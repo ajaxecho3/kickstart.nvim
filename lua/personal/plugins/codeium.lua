@@ -2,6 +2,7 @@ return {
   {
     'Exafunction/codeium.vim',
     event = 'BufEnter',
+    enabled = false,
     config = function()
       vim.keymap.set('i', '<c-;>', function()
         return vim.fn['codeium#CycleCompletions'](1)
