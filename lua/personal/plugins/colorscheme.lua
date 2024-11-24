@@ -1,16 +1,45 @@
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+--   group = vim.api.nvim_create_augroup('mycolorschemegroup', {}),
+--   callback = function()
+--     vim.cmd.colorscheme 'rose-pine-moon'
+--   end,
+-- })
+--
+function ColorMyPencils(color)
+  color = color or 'rose-pine-moon'
+  vim.cmd.colorscheme(color)
+
+  vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+  vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+end
+
 return {
   {
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    config = function()
+      require('rose-pine').setup {
+        variant = 'moon', -- auto, main, moon, or dawn
+        dark_variant = 'moon', -- main, moon, or dawn
+        dim_inactive_windows = false,
+        extend_background_behind_borders = true,
+        styles = {
+          italic = false,
+          transparent = true,
+        },
+      }
 
-    'sainnhe/sonokai',
-    lazy = true,
-    priority = 1000,
-    init = function()
-      vim.g.sonokai_style = 'andromeda'
-      vim.g.sonokai_enable_italic = 1
-      vim.g.sonokai_disable_italic_comment = 1
-      vim.g.sonokai_transparent_background = 1
-      vim.cmd.colorscheme 'sonokai'
+      ColorMyPencils()
     end,
+    -- lazy = true,
+    -- priority = 1000,
+    -- config = function()
+    --   vim.cmd.colorscheme 'rose-pine'
+    --
+    --   -- You can configure the colorscheme here
+    --   --  For example, you can set the `style` to 'storm' or 'day'
+    --   -- require('rose-pine').setup { style = 'moon' }
+    -- end,
   },
 
   { -- You can easily change to a different colorscheme.
@@ -24,7 +53,7 @@ return {
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      --     vim.cmd.colorscheme 'tokyonight-night'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'

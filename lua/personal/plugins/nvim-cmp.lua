@@ -95,8 +95,8 @@ return {
           { name = 'nvim_lsp' }, -- lsp
           { name = 'buffer', max_item_count = 5 }, -- text within current buffer
           { name = 'copilot' },
-          { name = 'codeium', disabled = true },
-          { name = 'supermaven' },
+          { name = 'codeium' },
+          { name = 'Supermaven', disable = true },
           { name = 'path', max_item_count = 3 }, -- file system paths
           { name = 'luasnip', max_item_count = 3 }, -- snippets
         },
@@ -108,8 +108,8 @@ return {
             maxwidth = 50,
             ellipsis_char = '...',
             symbol_map = {
-              Copilot = '',
-              --[[ Codeium = '', ]]
+              --[[ Copilot = '', ]]
+              Codeium = '',
               Supermaven = '',
             },
           },

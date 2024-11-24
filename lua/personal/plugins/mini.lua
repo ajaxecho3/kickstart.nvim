@@ -20,7 +20,7 @@ return {
         mappings = {
           add = 'g$a', -- Add surrounding in Normal and Visual modes
           delete = 'g$d', -- Delete surrounding
-          find = 'gSf', -- Find surrounding (to the right)
+          find = 'g$f', -- Find surrounding (to the right)
           find_left = 'g$F', -- Find surrounding (to the left)
           highlight = 'g$h', -- Highlight surrounding
           replace = 'g$r', -- Replace surrounding

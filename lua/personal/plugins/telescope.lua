@@ -29,8 +29,11 @@ return {
       local actions = require 'telescope.actions'
       local fb_actions = require('telescope').extensions.file_browser.actions
       require('telescope').setup {
+        defaults = {
+          layout_strategy = 'flex',
+        },
         pickers = {
-          theme = 'ivy',
+          --theme = 'ivy',
           intial_mode = 'normal',
         },
         extensions = {

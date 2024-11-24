@@ -1,6 +1,8 @@
+vim.opt.laststatus = 3
 vim.opt.number = false
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
+vim.opt.nu = true
 vim.opt.relativenumber = true
 vim.api.nvim_set_hl(0, 'LineNr', { fg = '#2E3440', bold = true })
 vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = '#51B3EC', bold = true })
@@ -32,7 +34,7 @@ vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = vim.g.vscode and 1000 or 300
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -65,17 +67,16 @@ vim.opt.termguicolors = true
 -- Set fold settings
 -- These options were reccommended by nvim-ufo
 -- See: https://github.com/kevinhwang91/nvim-ufo#minimal-configuration
-vim.opt.foldcolumn = '0'
-vim.opt.foldlevel = 99
-vim.opt.foldlevelstart = 99
-vim.opt.foldenable = true
+vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 
 -- Always keep 8 lines above/below cursor unless at start/end of file
 vim.opt.scrolloff = 8
 
 -- Place a column line
 vim.opt.colorcolumn = '100'
-
 vim.opt.guicursor = {
   'n-v-c:block', -- Normal, visual, command-line: block cursor
   'i-ci-ve:ver25', -- Insert, command-line insert, visual-exclude: vertical bar cursor with 25% width
@@ -84,3 +85,8 @@ vim.opt.guicursor = {
   'a:blinkwait700-blinkoff400-blinkon250', -- All modes: blinking settings
   'sm:block-blinkwait175-blinkoff150-blinkon175', -- Showmatch: block cursor with specific blinking settings
 }
+
+local status_ok, _ = pcall(vim.cmd, 'colorscheme ' .. 'rose-pine')
+if not status_ok then
+  return
+end

@@ -1,6 +1,5 @@
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
-
 local function split_on(s, delimiter)
   local result = {}
   local from = 1
@@ -36,6 +35,13 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('mycolorschemegroup', {}),
+  callback = function()
+    vim.cmd.colorscheme 'rose-pine'
+  end,
+})
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -45,11 +51,12 @@ vim.opt.rtp:prepend(lazypath)
 
 require 'personal.core.options'
 require 'personal.core.keymaps'
+
 require('lazy').setup({
   { import = 'personal.plugins' },
 }, {
   ui = {
-    colorscheme = 'sonokai',
+    colorscheme = 'rose-pine',
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
     icons = vim.g.have_nerd_font and {} or {
